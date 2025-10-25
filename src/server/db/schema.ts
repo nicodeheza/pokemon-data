@@ -1,29 +1,61 @@
-// Example model schema from the Drizzle docs
-// https://orm.drizzle.team/docs/sql-schema-declaration
+import { sqliteTable, int, text, primaryKey } from "drizzle-orm/sqlite-core";
+import type { Generations, PokemonTypes } from "~/types/pokemon.types";
 
-import { sql } from "drizzle-orm";
-import { index, sqliteTableCreator } from "drizzle-orm/sqlite-core";
+export interface Stat {
+  base: number;
+  effort: number;
+  name: string;
+}
 
-/**
- * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
- * database instance for multiple projects.
- *
- * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
- */
-export const createTable = sqliteTableCreator(
-  (name) => `binpar-challenge_${name}`,
+export const pokemonTable = sqliteTable("pokemon", {
+  id: int().primaryKey().notNull(),
+  name: text().notNull(),
+  image: text(),
+  generation: text().$type<Generations>().notNull(),
+  types: text({ mode: "json" }).$type<PokemonTypes[]>().notNull(),
+  evolutionId: int()
+    .notNull()
+    .references(() => evolutionsTable.id),
+  stats: text({ mode: "json" }).$type<Stat[]>(),
+});
+
+export const evolutionsTable = sqliteTable("evolution", {
+  id: int().primaryKey({ autoIncrement: true }),
+  first: int().references(() => evolutionStageTable.id),
+  second: int().references(() => evolutionStageTable.id),
+  third: int().references(() => evolutionStageTable.id),
+});
+
+export const evolutionStageTable = sqliteTable("evolution_stage", {
+  id: int().primaryKey({ autoIncrement: true }),
+});
+
+export const evolutionStageSpeciesTable = sqliteTable(
+  "evolution_species",
+  {
+    stageId: int()
+      .references(() => evolutionStageTable.id)
+      .notNull(),
+    specieId: int()
+      .references(() => specieTable.id)
+      .notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.stageId, table.specieId] })],
 );
 
-export const posts = createTable(
-  "post",
-  (d) => ({
-    id: d.integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
-    name: d.text({ length: 256 }),
-    createdAt: d
-      .integer({ mode: "timestamp" })
-      .default(sql`(unixepoch())`)
+export const specieTable = sqliteTable("specie", {
+  id: int().primaryKey().notNull(),
+});
+
+export const speciesPokemonsTable = sqliteTable(
+  "species_pokemon",
+  {
+    specieId: int()
+      .references(() => specieTable.id)
       .notNull(),
-    updatedAt: d.integer({ mode: "timestamp" }).$onUpdate(() => new Date()),
-  }),
-  (t) => [index("name_idx").on(t.name)],
+    pokemonId: int()
+      .references(() => pokemonTable.id)
+      .notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.specieId, table.pokemonId] })],
 );
