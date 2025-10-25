@@ -1,15 +1,41 @@
-import { listPokemons } from "../../server/db/pokemons.db";
-import type { PokemonListData } from "../types/pokemonList.types";
+import { cache } from "react";
+import {
+  getTotalPokemonsCount,
+  listPokemons,
+} from "../../server/db/pokemons.db";
+import type { PokemonListData, PokemonQueryParams } from "./pokemonList.types";
 
-//TODO - cache
-export const getPokemons = async (): Promise<PokemonListData[]> => {
-  const res = await listPokemons();
+interface PaginatedRes<T> {
+  currentPage: number;
+  totalPages: number;
+  data: T;
+}
 
-  return res.map((r) => ({
-    id: r.id,
-    name: r.name,
-    generation: r.generation,
-    types: r.types,
-    image: r.image ?? "/images/no-img.jpg",
-  }));
-};
+export const getPokemons = cache(
+  async (
+    searchParams?: PokemonQueryParams,
+  ): Promise<PaginatedRes<PokemonListData[]>> => {
+    const limit = 8;
+    const total = await getPokemonsCount();
+    const currentPage = searchParams?.page ?? 1;
+    const totalPages = Math.ceil(total / limit);
+    const offset = (currentPage - 1) * limit;
+    const res = await listPokemons({ limit, offset });
+
+    const data = res.map((r) => ({
+      id: r.id,
+      name: r.name,
+      generation: r.generation,
+      types: r.types,
+      image: r.image ?? "/images/no-img.jpg",
+    }));
+
+    return {
+      totalPages,
+      currentPage,
+      data,
+    };
+  },
+);
+
+const getPokemonsCount = cache(getTotalPokemonsCount);

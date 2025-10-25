@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import type { PokemonListData } from "~/app/types/pokemonList.types";
+import type { PokemonListData } from "~/app/services/pokemonList.types";
 import { PokemonCard } from "../pokemon-card/PokemonCard.component";
 
 interface Props {

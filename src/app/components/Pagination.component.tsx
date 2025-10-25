@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 import {
   Pagination as CnPagination,
@@ -14,18 +14,16 @@ import {
 
 interface PaginationComponentProps {
   totalPages: number;
+  currentPage: number;
   maxVisiblePages?: number;
 }
 
 export function Pagination({
-  totalPages,
+  totalPages = 1,
+  currentPage = 1,
   maxVisiblePages = 5,
 }: PaginationComponentProps) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const page = searchParams.get("page");
-
-  const currentPage = useMemo(() => Number(page), [page]);
 
   const pageNumbers = useMemo(() => {
     const pages: (number | "ellipsis")[] = [];

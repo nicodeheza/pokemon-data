@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { FC } from "react";
-import type { PokemonListData } from "~/app/types/pokemonList.types";
+import type { PokemonListData } from "~/app/services/pokemonList.types";
 import { Pill, type PillColors } from "~/components/Pill.component";
 import type { PokemonTypes } from "~/types/pokemon.types";
 
