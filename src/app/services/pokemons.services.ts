@@ -7,44 +7,43 @@ import {
 } from "../../server/db/pokemons.db";
 import type { PokemonListData, PokemonQueryParams } from "./pokemonList.types";
 
-interface PaginatedRes<T> {
+interface Pagination {
   currentPage: number;
   totalPages: number;
-  data: T;
 }
+const LIMIT = 8;
 
 export const getPokemons = cache(
-  async (
-    searchParams?: PokemonQueryParams,
-  ): Promise<PaginatedRes<PokemonListData[]>> => {
+  async (searchParams?: PokemonQueryParams): Promise<PokemonListData[]> => {
     const params = searchParams ?? {};
-    const limit = 8;
-    const total = await getPokemonsCount(params);
-    const currentPage = searchParams?.page ?? 1;
-    const totalPages = Math.ceil(total / limit);
-    const offset = (currentPage - 1) * limit;
+    const currentPage = Number(searchParams?.page) ?? 1;
+    const offset = (currentPage - 1) * LIMIT;
     const res = await listPokemons({
-      limit,
+      limit: LIMIT,
       offset,
       ...params,
     });
 
-    const data = res.map((r) => ({
+    return res.map((r) => ({
       id: r.id,
       name: r.name,
       generation: r.generation,
       types: r.types,
       image: r.image ?? "/images/no-img.jpg",
     }));
-
-    return {
-      totalPages,
-      currentPage,
-      data,
-    };
   },
 );
 
-const getPokemonsCount = cache((params: PokemonQueryParams) =>
+const getPokemonsCount = cache((params: Omit<PokemonQueryParams, "page">) =>
   getTotalPokemonsCount(params),
+);
+
+export const getPaginationData = cache(
+  async (searchParams?: PokemonQueryParams): Promise<Pagination> => {
+    const params = searchParams ?? {};
+    const total = await getPokemonsCount(params);
+    const currentPage = searchParams?.page ?? 1;
+    const totalPages = Math.ceil(total / LIMIT);
+    return { currentPage, totalPages };
+  },
 );

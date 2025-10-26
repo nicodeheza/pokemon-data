@@ -1,4 +1,4 @@
-import { useId, type FC } from "react";
+import { type FC } from "react";
 import { cn } from "~/lib/utils";
 
 export interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -14,8 +14,7 @@ export const Input: FC<Props> = ({
   id,
   ...props
 }) => {
-  const generatedId = useId();
-  const inputId = id ?? generatedId;
+  const inputId = id ?? label;
 
   return (
     <div className="w-full">

@@ -14,19 +14,18 @@ import {
 
 interface PaginationComponentProps {
   totalPages: number;
-  currentPage: number;
   maxVisiblePages?: number;
 }
 
 export function Pagination({
   totalPages = 1,
-  currentPage = 1,
   maxVisiblePages = 5,
 }: PaginationComponentProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   totalPages = Math.max(1, totalPages);
+  const currentPage = Number(searchParams.get("page")) ?? 1;
 
   const searchParamsObj = useMemo(
     () => Object.fromEntries(searchParams.entries()),
@@ -66,10 +65,8 @@ export function Pagination({
     return pages;
   }, [currentPage, maxVisiblePages, totalPages]);
 
-  console.log(totalPages);
-
   return (
-    <CnPagination>
+    <CnPagination className="p-6">
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious

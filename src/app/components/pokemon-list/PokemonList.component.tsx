@@ -1,15 +1,17 @@
 import type { FC } from "react";
-import type { PokemonListData } from "~/app/services/pokemonList.types";
 import { PokemonCard } from "../pokemon-card/PokemonCard.component";
+import type { PokemonQueryParams } from "~/app/services/pokemonList.types";
+import { getPokemons } from "~/app/services/pokemons.services";
 
 interface Props {
-  pokemons: PokemonListData[];
+  queryParams?: PokemonQueryParams;
 }
 
-export const PokemonList: FC<Props> = ({ pokemons }) => {
+export const PokemonList: FC<Props> = async ({ queryParams }) => {
+  const pokemons = await getPokemons(queryParams);
   if (!pokemons.length) return <NotPokemonsFound />;
   return (
-    <div className="m-8 grid w-full max-w-5xl grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+    <div className="grid w-full max-w-5xl grid-cols-[repeat(auto-fit,minmax(200px,1fr))] justify-items-center gap-4 p-8">
       {pokemons.map((pokemon) => (
         <PokemonCard key={pokemon.id} {...pokemon} />
       ))}
