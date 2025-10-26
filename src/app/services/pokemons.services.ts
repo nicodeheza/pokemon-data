@@ -18,6 +18,7 @@ export const getPokemons = cache(
     const limit = 8;
     const total = await getPokemonsCount({
       generation: searchParams?.generation,
+      type: searchParams?.type,
     });
     const currentPage = searchParams?.page ?? 1;
     const totalPages = Math.ceil(total / limit);
@@ -26,6 +27,7 @@ export const getPokemons = cache(
       limit,
       offset,
       generation: searchParams?.generation,
+      type: searchParams?.type,
     });
 
     const data = res.map((r) => ({

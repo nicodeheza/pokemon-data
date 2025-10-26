@@ -1,16 +1,24 @@
-import { and, count, eq } from "drizzle-orm";
+import { and, count, eq, sql } from "drizzle-orm";
 import { db } from ".";
 import { pokemonTable } from "./schema";
-import type { Generations } from "~/types/pokemon.types";
+import type { Generations, PokemonTypes } from "~/types/pokemon.types";
 
 interface Search {
   generation?: Generations;
+  type?: PokemonTypes;
 }
 
 function getWhere(search: Search) {
   return and(
     search.generation
       ? eq(pokemonTable.generation, search.generation)
+      : undefined,
+    search.type
+      ? sql`EXISTS (
+      SELECT 1
+      FROM json_each(${pokemonTable.types})
+      WHERE json_each.value = ${search.type}
+    )`
       : undefined,
   );
 }
@@ -31,7 +39,7 @@ export const listPokemons = (
       types: true,
       image: true,
     },
-    where: getWhere({ generation: search.generation }),
+    where: getWhere({ generation: search.generation, type: search.type }),
     orderBy: (pokemons, { asc }) => [asc(pokemons.id)],
   });
 };
