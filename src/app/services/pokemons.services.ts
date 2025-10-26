@@ -1,3 +1,5 @@
+"use server";
+
 import { cache } from "react";
 import {
   getTotalPokemonsCount,
@@ -15,19 +17,16 @@ export const getPokemons = cache(
   async (
     searchParams?: PokemonQueryParams,
   ): Promise<PaginatedRes<PokemonListData[]>> => {
+    const params = searchParams ?? {};
     const limit = 8;
-    const total = await getPokemonsCount({
-      generation: searchParams?.generation,
-      type: searchParams?.type,
-    });
+    const total = await getPokemonsCount(params);
     const currentPage = searchParams?.page ?? 1;
     const totalPages = Math.ceil(total / limit);
     const offset = (currentPage - 1) * limit;
     const res = await listPokemons({
       limit,
       offset,
-      generation: searchParams?.generation,
-      type: searchParams?.type,
+      ...params,
     });
 
     const data = res.map((r) => ({
