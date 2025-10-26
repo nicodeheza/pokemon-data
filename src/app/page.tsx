@@ -18,11 +18,19 @@ export default async function HomePage({ searchParams }: Props) {
 
   const pokemonsRes = await getPokemons(pokemonsSearch);
 
+  const getSuspenseKeys = () => {
+    const name = pokemonsSearch?.name ?? "allNames";
+    const type = pokemonsSearch?.type ?? "allTypes";
+    const generation = pokemonsSearch?.generation ?? "allGenerations";
+    const page = pokemonsSearch?.page ?? 1;
+    return [name, type, generation, page].join("-");
+  };
+
   return (
     <main>
       <div className="flex flex-col items-center justify-center pb-6">
         <FilterBar />
-        <Suspense fallback={<p>Loading...</p>}>
+        <Suspense fallback={<p>Loading...</p>} key={getSuspenseKeys()}>
           <PokemonList pokemons={pokemonsRes.data} />
         </Suspense>
         <Pagination

@@ -26,6 +26,8 @@ export function Pagination({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  totalPages = Math.max(1, totalPages);
+
   const searchParamsObj = useMemo(
     () => Object.fromEntries(searchParams.entries()),
     [searchParams],
@@ -64,6 +66,8 @@ export function Pagination({
     return pages;
   }, [currentPage, maxVisiblePages, totalPages]);
 
+  console.log(totalPages);
+
   return (
     <CnPagination>
       <PaginationContent>
@@ -90,6 +94,7 @@ export function Pagination({
                   query: { ...searchParamsObj, page },
                 }}
                 isActive={currentPage === page}
+                className={currentPage === page ? "pointer-events-none" : ""}
               >
                 {page}
               </PaginationLink>
