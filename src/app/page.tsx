@@ -4,6 +4,7 @@ import { PokemonList } from "./components/pokemon-list/PokemonList.component";
 import type { PokemonQueryParams } from "./services/pokemonList.types";
 import { validatePokemonParams } from "./services/pokemons.validations";
 import { Pagination } from "./components/Pagination.component";
+import { FilterBar } from "./components/FilterBar.component";
 
 interface Props {
   searchParams?: Promise<PokemonQueryParams>;
@@ -20,6 +21,7 @@ export default async function HomePage({ searchParams }: Props) {
   return (
     <main>
       <div className="flex flex-col items-center justify-center pb-6">
+        <FilterBar />
         <Suspense fallback={<p>Loading...</p>}>
           <PokemonList pokemons={pokemonsRes.data} />
         </Suspense>

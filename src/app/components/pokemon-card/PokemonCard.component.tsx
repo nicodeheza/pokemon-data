@@ -2,7 +2,7 @@ import Image from "next/image";
 import type { FC } from "react";
 import type { PokemonListData } from "~/app/services/pokemonList.types";
 import { Pill, type PillColors } from "~/components/Pill.component";
-import type { PokemonTypes } from "~/types/pokemon.types";
+import type { Generations, PokemonTypes } from "~/types/pokemon.types";
 
 const typeColors: Record<PokemonTypes, PillColors> = {
   normal: "bg-gray-400",
@@ -27,6 +27,18 @@ const typeColors: Record<PokemonTypes, PillColors> = {
   unknown: "bg-gray-600",
 };
 
+const GenerationToLabelMap: Record<Generations, string> = {
+  "generation-i": "Generation I",
+  "generation-ii": "Generation II",
+  "generation-iii": "Generation III",
+  "generation-iv": "Generation IV",
+  "generation-v": "Generation V",
+  "generation-vi": "Generation VI",
+  "generation-vii": "Generation VII",
+  "generation-viii": "Generation VIII",
+  "generation-ix": "Generation IX",
+};
+
 export const PokemonCard: FC<PokemonListData> = ({
   name,
   image,
@@ -46,7 +58,7 @@ export const PokemonCard: FC<PokemonListData> = ({
 
         <div className="mb-3">
           <p className="text-center text-sm text-gray-600 capitalize">
-            {generation.replace(/-/g, " ")}
+            {GenerationToLabelMap[generation]}
           </p>
         </div>
 
