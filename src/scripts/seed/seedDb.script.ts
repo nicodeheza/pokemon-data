@@ -57,7 +57,7 @@ async function insertEvolutionStage(
   if (!id) return;
   await Promise.all(
     species.map(async (s) => {
-      db.insert(schema.evolutionStageSpeciesTable).values({
+      await db.insert(schema.evolutionStageSpeciesTable).values({
         stageId: id,
         specieId: s.id,
       });
