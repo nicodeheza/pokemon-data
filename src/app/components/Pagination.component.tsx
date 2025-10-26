@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import {
   Pagination as CnPagination,
@@ -24,6 +24,12 @@ export function Pagination({
   maxVisiblePages = 5,
 }: PaginationComponentProps) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const searchParamsObj = useMemo(
+    () => Object.fromEntries(searchParams.entries()),
+    [searchParams],
+  );
 
   const pageNumbers = useMemo(() => {
     const pages: (number | "ellipsis")[] = [];
@@ -65,7 +71,7 @@ export function Pagination({
           <PaginationPrevious
             href={{
               pathname,
-              query: { page: currentPage - 1 },
+              query: { ...searchParamsObj, page: currentPage - 1 },
             }}
             className={
               currentPage === 1 ? "pointer-events-none opacity-50" : ""
@@ -81,7 +87,7 @@ export function Pagination({
               <PaginationLink
                 href={{
                   pathname,
-                  query: { page },
+                  query: { ...searchParamsObj, page },
                 }}
                 isActive={currentPage === page}
               >
@@ -95,7 +101,7 @@ export function Pagination({
           <PaginationNext
             href={{
               pathname,
-              query: { page: currentPage + 1 },
+              query: { ...searchParamsObj, page: currentPage + 1 },
             }}
             className={
               currentPage === totalPages ? "pointer-events-none opacity-50" : ""
