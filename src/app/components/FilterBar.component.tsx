@@ -17,7 +17,7 @@ export const FilterBar: FC = () => {
   const replaceSearchParams = useReplaceSearchParams();
 
   const setNameParam = useDebounceEventHandler((name: string) => {
-    replaceSearchParams("name", name);
+    replaceSearchParams({ name, page: undefined });
   });
 
   useEffect(() => {
@@ -39,13 +39,13 @@ export const FilterBar: FC = () => {
 
   const onGenerationChange = (generation: GenerationOptions | undefined) => {
     const newGeneration = generation === "all" ? undefined : generation;
-    replaceSearchParams("generation", newGeneration);
+    replaceSearchParams({ generation: newGeneration, page: undefined });
     updateFilter({ generation: newGeneration });
   };
 
   const onTypeChange = (type: TypeOptions | undefined) => {
     const newType = type === "all" ? undefined : type;
-    replaceSearchParams("type", newType);
+    replaceSearchParams({ type: newType, page: undefined });
     updateFilter({ type: newType });
   };
 

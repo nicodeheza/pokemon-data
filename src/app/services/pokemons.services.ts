@@ -16,11 +16,17 @@ export const getPokemons = cache(
     searchParams?: PokemonQueryParams,
   ): Promise<PaginatedRes<PokemonListData[]>> => {
     const limit = 8;
-    const total = await getPokemonsCount();
+    const total = await getPokemonsCount({
+      generation: searchParams?.generation,
+    });
     const currentPage = searchParams?.page ?? 1;
     const totalPages = Math.ceil(total / limit);
     const offset = (currentPage - 1) * limit;
-    const res = await listPokemons({ limit, offset });
+    const res = await listPokemons({
+      limit,
+      offset,
+      generation: searchParams?.generation,
+    });
 
     const data = res.map((r) => ({
       id: r.id,
@@ -38,4 +44,6 @@ export const getPokemons = cache(
   },
 );
 
-const getPokemonsCount = cache(getTotalPokemonsCount);
+const getPokemonsCount = cache((params: PokemonQueryParams) =>
+  getTotalPokemonsCount(params),
+);

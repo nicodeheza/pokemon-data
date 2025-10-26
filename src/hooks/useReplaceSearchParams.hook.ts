@@ -7,13 +7,16 @@ export function useReplaceSearchParams() {
   const router = useRouter();
 
   return useCallback(
-    (key: string, value: string | undefined) => {
+    (newParams: Record<string, string | undefined>) => {
       const params = new URLSearchParams(searchParams.toString());
-      if (value) {
-        params.set(key, value);
-      } else {
-        params.delete(key);
-      }
+
+      Object.entries(newParams).forEach(([key, value]) => {
+        if (value) {
+          params.set(key, value);
+        } else {
+          params.delete(key);
+        }
+      });
 
       if (params.size === 0) return router.replace(pathname);
 
