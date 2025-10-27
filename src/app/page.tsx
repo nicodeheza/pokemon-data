@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { PokemonList } from "./components/pokemon-list/PokemonList.component";
+import { PokemonList } from "./components/PokemonList.component";
 import type { PokemonQueryParams } from "./services/pokemonList.types";
 import { validatePokemonParams } from "./services/pokemons.validations";
 import { FilterBar } from "./components/FilterBar.component";

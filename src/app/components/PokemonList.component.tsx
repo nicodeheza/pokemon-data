@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { PokemonCard } from "../pokemon-card/PokemonCard.component";
+import { PokemonCard } from "./PokemonCard.component";
 import type { PokemonQueryParams } from "~/app/services/pokemonList.types";
 import { getPokemons } from "~/app/services/pokemons.services";
 

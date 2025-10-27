@@ -1,4 +1,5 @@
 import type { ReactNode, FC } from "react";
+import { cn } from "~/lib/utils";
 export type PillColors =
   | "bg-gray-400"
   | "bg-red-700"
@@ -28,7 +29,10 @@ interface PillProps {
 export const Pill: FC<PillProps> = ({ children, bgColor }) => {
   return (
     <span
-      className={`${bgColor ?? "bg-gray-400"} rounded-full px-3 py-1 text-sm font-semibold text-white capitalize shadow-sm`}
+      className={cn(
+        bgColor ?? "bg-gray-400",
+        "rounded-full px-3 py-1 text-sm font-semibold text-white capitalize shadow-sm",
+      )}
     >
       {children}
     </span>
