@@ -1,4 +1,4 @@
-# Binpar Challenge - Pokédex
+# Pokemon Data
 
 Una aplicación web de Pokédex construida con Next.js 15, React 19 y Drizzle ORM.
 
@@ -24,8 +24,8 @@ Los datos provienen de la [PokéAPI](https://pokeapi.co/), pero para optimizar l
 1. Clona el repositorio:
 
 ```bash
-git clone <url-del-repositorio>
-cd <reop-name>
+git clone https://github.com/nicodeheza/pokemon-data.git
+cd pokemon-data
 ```
 
 2. Instala las dependencias:
@@ -67,7 +67,7 @@ npm start
 
 - 📱 Diseño responsivo
 - 🔍 Búsqueda de Pokémon
-- 🎯 Filtrado por tipo
+- 🎯 Filtrado por tipo, nombre y generación.
 - 📄 Paginación
 - 📊 Vista detallada de cada Pokémon
 - ⚡ Optimizado con React Server Components
