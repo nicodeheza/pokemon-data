@@ -2,6 +2,7 @@ import { and, count, eq, inArray, sql } from "drizzle-orm";
 import { db } from ".";
 import { pokemonTable } from "./schema";
 import type { Generations, PokemonTypes } from "~/types/pokemon.types";
+import { alias } from "drizzle-orm/sqlite-core";
 
 interface Search {
   generation?: Generations;
@@ -9,7 +10,7 @@ interface Search {
   name?: string;
 }
 
-async function getWhere({ generation, type, name }: Search) {
+async function getListWhere({ generation, type, name }: Search) {
   const conditions = [];
 
   if (generation) conditions.push(eq(pokemonTable.generation, generation));
@@ -46,7 +47,7 @@ export const listPokemons = async (
       types: true,
       image: true,
     },
-    where: await getWhere({
+    where: await getListWhere({
       generation: search.generation,
       type: search.type,
       name: search.name,
@@ -59,7 +60,7 @@ export const getTotalPokemonsCount = async (search: Search) => {
   const result = await db
     .select({ count: count() })
     .from(pokemonTable)
-    .where(await getWhere(search));
+    .where(await getListWhere(search));
   return result[0]?.count ?? 0;
 };
 
@@ -71,3 +72,29 @@ function getPokemonsByNameEvolutionIds(name: string) {
     where: sql`lower(${pokemonTable.name}) like lower(${`${name}%`})`,
   });
 }
+
+const evolutionPokemon = alias(pokemonTable, "evolutionPokemon");
+export const getPokemonDetailsList = async (id: number) => {
+  return db
+    .select({
+      id: pokemonTable.id,
+      name: pokemonTable.name,
+      image: pokemonTable.image,
+      generation: pokemonTable.generation,
+      types: pokemonTable.types,
+      stats: pokemonTable.stats,
+      evolutions: {
+        id: evolutionPokemon.id,
+        name: evolutionPokemon.name,
+        image: evolutionPokemon.image,
+        evolutionId: evolutionPokemon.evolutionId,
+        stage: evolutionPokemon.evolutionStage,
+      },
+    })
+    .from(pokemonTable)
+    .where(eq(pokemonTable.id, id))
+    .innerJoin(
+      evolutionPokemon,
+      eq(evolutionPokemon.evolutionId, pokemonTable.evolutionId),
+    );
+};

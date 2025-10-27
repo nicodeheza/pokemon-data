@@ -9,7 +9,7 @@ import {
   type SpecieDetails,
 } from "./fetchPokeApi.script";
 import * as schema from "~/server/db/schema";
-import type { PokemonTypes } from "~/types/pokemon.types";
+import type { EvolutionSteps, PokemonTypes, Stat } from "~/types/pokemon.types";
 import { createClient } from "@libsql/client";
 
 const client = createClient({ url: process.env.DATABASE_URL ?? "" });
@@ -72,7 +72,7 @@ async function insertFromEvolution(evolutionUrl: string) {
 async function insertPokemonFromMaySpecies(
   species: SpecieDetails[] | undefined,
   evolutionId: number,
-  evolutionStep: schema.EvolutionSteps,
+  evolutionStep: EvolutionSteps,
 ) {
   if (!species) return;
 
@@ -84,7 +84,7 @@ async function insertPokemonFromMaySpecies(
 async function insertPokemonsFromSpecie(
   specie: SpecieDetails,
   evolutionId: number,
-  evolutionStep: schema.EvolutionSteps,
+  evolutionStep: EvolutionSteps,
 ) {
   const pokemonsUrls = specie.varieties.map((v) => v.pokemon.url);
 
@@ -110,7 +110,7 @@ function getTypes(types: PokemonDetails["types"]): PokemonTypes[] {
   return types.map((t) => t.type.name);
 }
 
-function getStats(stats: PokemonDetails["stats"]): schema.Stat[] {
+function getStats(stats: PokemonDetails["stats"]): Stat[] {
   return stats.map((s) => ({
     base: s.base_stat,
     effort: s.effort,

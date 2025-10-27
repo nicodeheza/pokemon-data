@@ -1,13 +1,10 @@
 import { sqliteTable, int, text } from "drizzle-orm/sqlite-core";
-import type { Generations, PokemonTypes } from "~/types/pokemon.types";
-
-export interface Stat {
-  base: number;
-  effort: number;
-  name: string;
-}
-
-export type EvolutionSteps = "first" | "second" | "third";
+import type {
+  EvolutionSteps,
+  Generations,
+  PokemonTypes,
+  Stat,
+} from "~/types/pokemon.types";
 
 export const pokemonTable = sqliteTable("pokemon", {
   id: int().primaryKey().notNull(),
