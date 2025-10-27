@@ -8,6 +8,7 @@ import type { Generations, PokemonTypes } from "~/types/pokemon.types";
 import type { PokemonQueryParams } from "~/app/services/pokemonList.types";
 import { cleanPokemonSearchObject } from "../services/pokemons.validations";
 import { useDebounceEventHandler } from "~/hooks/useDebounceEventHandler.hook";
+import { Button } from "~/components/ui/button";
 
 type Filters = Omit<PokemonQueryParams, "page">;
 
@@ -49,6 +50,18 @@ export const FilterBar: FC = () => {
     updateFilter({ type: newType });
   };
 
+  const clearFilters = () => {
+    if (!filters || !(filters.generation || filters.name || filters.type))
+      return;
+    replaceSearchParams({
+      generation: undefined,
+      page: undefined,
+      name: undefined,
+      type: undefined,
+    });
+    setFilters(undefined);
+  };
+
   return (
     <div className="flex w-full max-w-5xl flex-col items-stretch justify-between gap-4 p-4 sm:gap-5 sm:p-6 md:p-8 xl:flex-row xl:items-center">
       <Input
@@ -70,6 +83,13 @@ export const FilterBar: FC = () => {
           onValueChange={onTypeChange}
           value={filters?.type}
         />
+        <Button
+          onClick={clearFilters}
+          variant={"outline"}
+          className="max-w-fit cursor-pointer"
+        >
+          Clear
+        </Button>
       </div>
     </div>
   );
