@@ -34,14 +34,10 @@ export const getPokemons = cache(
   },
 );
 
-const getPokemonsCount = cache((params: Omit<PokemonQueryParams, "page">) =>
-  getTotalPokemonsCount(params),
-);
-
 export const getPaginationData = cache(
   async (searchParams?: PokemonQueryParams): Promise<Pagination> => {
     const params = searchParams ?? {};
-    const total = await getPokemonsCount(params);
+    const total = await getTotalPokemonsCount(params);
     const currentPage = searchParams?.page ?? 1;
     const totalPages = Math.ceil(total / LIMIT);
     return { currentPage, totalPages };

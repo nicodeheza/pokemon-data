@@ -1,6 +1,6 @@
 "use server";
 
-import { getPokemonDetailsList } from "~/server/db/pokemons.db";
+import { getPokemonDetailsData } from "~/server/db/pokemons.db";
 import type { PokemonsDetails, PokemonEvolution } from "./pokemonDetails.types";
 
 const DEFAULT_IMAGE = "/images/no-img.jpg";
@@ -8,7 +8,7 @@ const DEFAULT_IMAGE = "/images/no-img.jpg";
 export const getPokemonsDetails = async (
   id: number,
 ): Promise<PokemonsDetails | undefined> => {
-  const res = await getPokemonDetailsList(id);
+  const res = await getPokemonDetailsData(id);
   const base = res[0];
   if (!base) return;
 

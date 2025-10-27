@@ -74,7 +74,7 @@ function getPokemonsByNameEvolutionIds(name: string) {
 }
 
 const evolutionPokemon = alias(pokemonTable, "evolutionPokemon");
-export const getPokemonDetailsList = async (id: number) => {
+export const getPokemonDetailsData = async (id: number) => {
   return db
     .select({
       id: pokemonTable.id,
