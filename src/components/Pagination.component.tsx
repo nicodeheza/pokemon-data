@@ -26,7 +26,6 @@ export function Pagination({
 
   totalPages = Math.max(1, totalPages);
   const currentPage = Number(searchParams.get("page")) || 1;
-  console.log(currentPage);
 
   const searchParamsObj = useMemo(
     () => Object.fromEntries(searchParams.entries()),
