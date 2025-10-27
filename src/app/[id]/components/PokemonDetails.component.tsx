@@ -3,6 +3,7 @@ import type { PokemonsDetails } from "../services/pokemonDetails.types";
 import { GeneralData } from "./GeneralData.component";
 import { Stats } from "./Stats.component";
 import { Evolutions } from "./Evolutions.component";
+import { ReturnToList } from "./ReturnToList.component";
 
 interface Props {
   pokemonDetails: PokemonsDetails;
@@ -25,6 +26,9 @@ export const PokemonDetails: FC<Props> = ({ pokemonDetails }) => {
       <Stats stats={stats} />
 
       <Evolutions evolutions={evolutions} currentPokemonId={id} />
+      <div className="flex w-full justify-center p-14">
+        <ReturnToList />
+      </div>
     </div>
   );
 };

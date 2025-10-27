@@ -13,9 +13,5 @@ export default async function BlogPostPage({
 
   if (!pokemon) notFound();
 
-  return (
-    <div>
-      <PokemonDetails pokemonDetails={pokemon} />
-    </div>
-  );
+  return <PokemonDetails pokemonDetails={pokemon} />;
 }

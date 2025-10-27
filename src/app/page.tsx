@@ -5,6 +5,7 @@ import { validatePokemonParams } from "./services/pokemons.validations";
 import { FilterBar } from "./components/FilterBar.component";
 import { PokemonPagination } from "./components/PokemonPagination.component";
 import { PokemonsLoader } from "./components/PokemonsLoader.component";
+import { SearchParamsTracker } from "./components/SearchParmasTracker.component";
 
 interface Props {
   searchParams?: Promise<PokemonQueryParams>;
@@ -32,6 +33,7 @@ export default async function HomePage({ searchParams }: Props) {
           <PokemonList queryParams={pokemonsSearch} />
         </Suspense>
         <PokemonPagination searchParams={pokemonsSearch} />
+        <SearchParamsTracker searchParams={pokemonsSearch} />
       </div>
     </main>
   );

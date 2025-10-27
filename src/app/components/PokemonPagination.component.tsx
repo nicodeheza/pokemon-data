@@ -10,6 +10,5 @@ interface Props {
 export const PokemonPagination: FC<Props> = async ({ searchParams }) => {
   const { totalPages } = await getPaginationData(searchParams ?? {});
 
-  console.log(totalPages, searchParams);
   return <Pagination totalPages={totalPages} />;
 };
