@@ -44,29 +44,6 @@ function getEvolutionsSpeciesUrls(chain: ChainLink): string[][] {
   return stages;
 }
 
-async function insertEvolutionStage(
-  species: SpecieDetails[] | undefined,
-): Promise<number | undefined> {
-  if (!species) return;
-
-  const [res] = await db
-    .insert(schema.evolutionStageTable)
-    .values({})
-    .returning({ id: schema.evolutionStageTable.id });
-  const id = res?.id;
-  if (!id) return;
-  await Promise.all(
-    species.map(async (s) => {
-      await db.insert(schema.evolutionStageSpeciesTable).values({
-        stageId: id,
-        specieId: s.id,
-      });
-    }),
-  );
-
-  return id;
-}
-
 async function insertFromEvolution(evolutionUrl: string) {
   const evolution = await getEvolution(evolutionUrl);
 
@@ -75,50 +52,39 @@ async function insertFromEvolution(evolutionUrl: string) {
 
   const firstSpecies =
     firstSpecieUrls &&
-    (await Promise.all(firstSpecieUrls.map((url) => insertSpecie(url))));
+    (await Promise.all(firstSpecieUrls.map((url) => getSpecieDetails(url))));
   const secondSpecies =
     secondSpecieUrls &&
-    (await Promise.all(secondSpecieUrls.map((url) => insertSpecie(url))));
+    (await Promise.all(secondSpecieUrls.map((url) => getSpecieDetails(url))));
   const thirdSpecies =
     thirdSpecieUrls &&
-    (await Promise.all(thirdSpecieUrls.map((url) => insertSpecie(url))));
-
-  const firstId = await insertEvolutionStage(firstSpecies);
-  const secondId = await insertEvolutionStage(secondSpecies);
-  const thirdId = await insertEvolutionStage(thirdSpecies);
+    (await Promise.all(thirdSpecieUrls.map((url) => getSpecieDetails(url))));
 
   await db.insert(schema.evolutionsTable).values({
     id: evolution.id,
-    first: firstId,
-    second: secondId,
-    third: thirdId,
   });
 
-  await insertPokemonFromMaySpecies(firstSpecies, evolution.id);
-  await insertPokemonFromMaySpecies(secondSpecies, evolution.id);
-  await insertPokemonFromMaySpecies(thirdSpecies, evolution.id);
+  await insertPokemonFromMaySpecies(firstSpecies, evolution.id, "first");
+  await insertPokemonFromMaySpecies(secondSpecies, evolution.id, "second");
+  await insertPokemonFromMaySpecies(thirdSpecies, evolution.id, "third");
 }
 
 async function insertPokemonFromMaySpecies(
   species: SpecieDetails[] | undefined,
   evolutionId: number,
+  evolutionStep: schema.EvolutionSteps,
 ) {
   if (!species) return;
 
   await Promise.all(
-    species.map((s) => insertPokemonsFromEspecie(s, evolutionId)),
+    species.map((s) => insertPokemonsFromSpecie(s, evolutionId, evolutionStep)),
   );
 }
 
-async function insertSpecie(specieUrl: string): Promise<SpecieDetails> {
-  const specie = await getSpecieDetails(specieUrl);
-  await db.insert(schema.specieTable).values({ id: specie.id });
-  return specie;
-}
-
-async function insertPokemonsFromEspecie(
+async function insertPokemonsFromSpecie(
   specie: SpecieDetails,
   evolutionId: number,
+  evolutionStep: schema.EvolutionSteps,
 ) {
   const pokemonsUrls = specie.varieties.map((v) => v.pokemon.url);
 
@@ -134,11 +100,7 @@ async function insertPokemonsFromEspecie(
         stats: getStats(pokemon.stats),
         generation: specie.generation.name,
         evolutionId,
-      });
-
-      await db.insert(schema.speciesPokemonsTable).values({
-        specieId: specie.id,
-        pokemonId: pokemon.id,
+        evolutionStage: evolutionStep,
       });
     }),
   );
