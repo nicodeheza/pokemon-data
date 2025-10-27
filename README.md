@@ -1,29 +1,73 @@
-# Create T3 App
+# Binpar Challenge - Pokédex
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+Una aplicación web de Pokédex construida con Next.js 15, React 19 y Drizzle ORM.
 
-## What's next? How do I make an app with this?
+Los datos provienen de la [PokéAPI](https://pokeapi.co/), pero para optimizar las queries y no sobrecargar la API, el proyecto cuenta con un script para transferir los datos necesarios de la API a una base de datos SQLite.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## 🚀 Tecnologías
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+- **Next.js 15** - Framework de React con App Router
+- **React 19** - Biblioteca de interfaz de usuario
+- **TypeScript** - Tipado estático
+- **Drizzle ORM** - ORM para base de datos
+- **Tailwind CSS** - Framework de CSS
+- **Jotai** - Gestión de estado
+- **Zod** - Validación de esquemas
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+## 📋 Requisitos Previos
 
-## Learn More
+- Node.js 20 o superior
+- npm
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+## 🛠️ Instalación
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+1. Clona el repositorio:
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+```bash
+git clone <url-del-repositorio>
+cd <reop-name>
+```
 
-## How do I deploy this?
+2. Instala las dependencias:
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+```bash
+npm install
+```
+
+3. Crea un archivo `.env` en la raíz del proyecto con la siguiente variable de entorno:
+
+```
+DATABASE_URL="file:./db.sqlite"
+```
+
+4. Configura y llena la base de datos:
+
+```bash
+npm run db:seed
+```
+
+## 🚀 Uso
+
+### Modo Desarrollo
+
+```bash
+npm run dev
+```
+
+La aplicación estará disponible en `http://localhost:3000`
+
+### Producción
+
+```bash
+npm run build
+npm start
+```
+
+## 🎨 Características
+
+- 📱 Diseño responsivo
+- 🔍 Búsqueda de Pokémon
+- 🎯 Filtrado por tipo
+- 📄 Paginación
+- 📊 Vista detallada de cada Pokémon
+- ⚡ Optimizado con React Server Components
