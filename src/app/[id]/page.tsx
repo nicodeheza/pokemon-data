@@ -2,7 +2,7 @@ import { PokemonDetails } from "./components/PokemonDetails.component";
 import { getPokemonsDetails } from "./services/pokemonDetails.service";
 import { notFound } from "next/navigation";
 
-export default async function BlogPostPage({
+export default async function PokemonDetailPage({
   params,
 }: {
   params: Promise<{ id: number }>;
